@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import * as API from 'services/api';
-import { MovieList } from "components/HomeList";
+import { MovieList } from "components/Movie/MovieList";
 import { Loader } from "components/Loader/Loader";
 
 const HomePage = () => {

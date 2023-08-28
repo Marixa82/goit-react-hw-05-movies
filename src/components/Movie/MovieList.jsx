@@ -1,4 +1,4 @@
-import { HomeItem } from "./HomeItem";
+import { MovieItem } from "./MovieItem";
 // import {  useLocation } from 'react-router-dom';
 export const MovieList = ({ movies }) => {
 
@@ -7,8 +7,12 @@ export const MovieList = ({ movies }) => {
         
         <ul>
             {visibleMovies.map(movie => (
-                
-                <HomeItem key={movie.id} title={movie.title} />
+            <MovieItem key={movie.id} title={movie.title} 
+            movieId={movie.id}
+            poster={movie['poster_path']}
+            type={movie['media_type']}
+            rating={movie['vote_average']}
+            date={movie['release_date']}/>
             ))}
         </ul>
            )

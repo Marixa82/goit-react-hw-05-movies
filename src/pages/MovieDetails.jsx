@@ -1,50 +1,54 @@
-import { Link, Outlet, useParams, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 import React from 'react';
-
-import { useRef, Suspense, useState, useEffect } from "react"; 
-// import { Loader } from 'components/Loader/Loader';
+// import Cast from 'components/Cast/Cast';
+import { Loader } from 'components/Loader/Loader';
+import { useRef, Suspense, useState, useEffect} from "react"; 
 import * as API from 'services/api';
-// import { URL_IMG } from 'services/api';
-import DetailList from 'components/MovieDetailsList';
+import MovieDetailsList from 'components/MovieDetailsList/MovieDetailsList';
 
 const MovieDetails = () => {
-  const posterImgUrl = API.URL_IMG;
-   const location = useLocation();
-  const backLinkLocationRef = useRef(location.state?.from ?? '/movies');
+  const posterImgUrl = 'https://image.tmdb.org/t/p/w500';
+  const location = useLocation();
+  const backLinkLocationRef = useRef(location.state?.from ?? '/');
   const { movieId } = useParams();
   const [movieData, setMovieData] = useState(null);
-  const detailsMovieData = async (id) => {
-      try {
-        // setIsLoading(true);
-        const detailsMovie = await API.fetchMovieDetails(id);
-        setMovieData(detailsMovie)
-      } catch (error) {
-      console.log(error.message);
-    }
-    };
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  
    useEffect(() => {
-    // if (!movieId) return;
-    
-     detailsMovieData(movieId);
+      
+     const movieDetails = async () => {
+       try {
+         const movieDetailsData = await API.fetchMovieDetails(movieId)
+         setMovieData(movieDetailsData);
+       } catch (error) {
+         setError(error);
+       } finally {
+         setIsLoading(false);
+       }
+     };
+       movieDetails(movieId);
+       
   }, [movieId])
 
   return (
     <>
-      {movieData && (
+      <Link to={backLinkLocationRef.current}>Назад к странице коллекции</Link>
+      <h1>Movie Details:
+        {movieData?.title
+        || 'Title not available'}</h1>
+      
       <>
-        <DetailList movie={movieData} posterImgUrl={posterImgUrl} />
-        <Link to={backLinkLocationRef.current}>Назад к странице коллекции</Link>
+        {error && <p>Something goes wrong</p>} 
+       {isLoading && <Loader />}
+        <MovieDetailsList movies={movieData} posterImgUrl={posterImgUrl}/> 
+        
       </>  
-      )}
-      
-      {/* {error && <p>Something goes wrong</p>} */}
-      {/* {isLoading && <Loader />} */}
-      
-      <h1>Movie Details: {movieData?.title
- || 'Title not available'}</h1>
       <ul>
         <li>
           <Link to="cast">Actors</Link>
+          {/* <Cast/> */}
         </li>
         <li>
           <Link to="reviews">About</Link>
@@ -58,3 +62,21 @@ const MovieDetails = () => {
 };
 
 export default MovieDetails;
+
+
+ /* <div>
+        <img
+    src={movieData?.backdrop_path && posterImgUrl + movieData.backdrop_path}
+    alt={movieData?.title}
+/>
+
+            {movieData?.original_title}
+              {movieData?.vote_average && (Math.round(movieData['vote_average'] * 10) / 10)}  
+              {movieData?.overview}
+              
+                 {movieData?.genres && (
+  <div>
+    {movieData['genres'].map(genre => genre.name).join(' ')}
+  </div>
+)}
+            </div> */
