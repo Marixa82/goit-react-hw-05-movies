@@ -1,6 +1,9 @@
 import React from "react";
 import { Loader } from "components/Loader/Loader";
 import { URL_IMG } from "services/api";
+import PropTypes from 'prop-types'; 
+import { Ul, Span, Li } from "./Review.styled";
+
 const ReviewsList = ({ reviews }) => {
   if (!reviews) {
     return <Loader />;
@@ -15,10 +18,10 @@ const ReviewsList = ({ reviews }) => {
       {filteredReviews.length === 0 ? (
         <p>We don't have any reviews for this movie</p>
       ) : (
-        <ul>
+        <Ul>
           {filteredReviews.map(({ id, author, author_details, content, url }) => (
-            <li key={id}>
-              <p>Author: {author}</p>
+            <Li key={id}>
+              <Span>Author:</Span> <p>{author}</p>
               <p>
                 {author_details && author_details.avatar_path ? (
                   <img
@@ -29,19 +32,22 @@ const ReviewsList = ({ reviews }) => {
                   ""
                 )}
               </p>
-              <p>Content: {content.length > 100 ? content.slice(0, 500) + '...' : content}</p>
-              <p>Rating: {author_details && author_details.rating ? author_details.rating : ""}</p>
+              <Span>Content:</Span> <p>{content.length > 100 ? content.slice(0, 500) + '...' : content}</p>
+              <Span>Rating:</Span> <p>{author_details && author_details.rating ? author_details.rating : ""}</p>
               <a href={url} target="_blank" rel="noopener noreferrer">
                 more details
               </a>
-            </li>
+            </Li>
           ))}
-        </ul>
+        </Ul>
       )}
     </>
   );
 };
 
+ReviewsList.propTypes = {
+  reviews: PropTypes.array.isRequired,
+};
 export default ReviewsList;
 
 

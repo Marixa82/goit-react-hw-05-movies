@@ -1,7 +1,7 @@
-
+import {Main, Title} from "./Pages.styled";
 import { useState, useEffect } from "react";
 import * as API from 'services/api';
-import { MovieList } from "components/Movie/MovieList";
+import MovieList from "components/Movie/MovieList";
 import { Loader } from "components/Loader/Loader";
 
 const HomePage = () => {
@@ -26,10 +26,10 @@ const HomePage = () => {
   }, [])
 
     return (
-      <main>
+      <Main>
         <div>
           {isLoading && <Loader />}
-          <h2>Tranding Today</h2>
+          <Title>Tranding Today</Title>
            {error ? (<p>Error: {error.message}</p>
                 ) : movies !== 0 ? (
                     <MovieList movies={movies} />
@@ -37,7 +37,7 @@ const HomePage = () => {
                     <p>No movies found.</p> 
                 )}
         </div>
-          </main>
+          </Main>
     )
 }
 export default HomePage;

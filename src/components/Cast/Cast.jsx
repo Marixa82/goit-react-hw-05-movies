@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import * as API from 'services/api';
 import { Loader } from '../Loader/Loader';
 import CastList from './CastList';
-// import api from 'services/api';
+
 
   const Cast = () => {
   const { movieId } = useParams();
@@ -27,8 +27,6 @@ import CastList from './CastList';
 
   return (
     <>
-       {/* {isLoading &&
-        <Loader />} */}
       <CastList actors={movieCredit} /> 
       {isLoading ? (
   <Loader />
@@ -50,3 +48,4 @@ import CastList from './CastList';
   
 };
 export default Cast;
+

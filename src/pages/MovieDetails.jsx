@@ -1,60 +1,47 @@
-import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
+import {  Outlet,  useParams } from 'react-router-dom';
 import React from 'react';
-// import Cast from 'components/Cast/Cast';
-import { Loader } from 'components/Loader/Loader';
-import { useRef, Suspense, useState, useEffect} from "react"; 
+
+import {  Suspense, useState, useEffect} from "react"; 
 import * as API from 'services/api';
 import MovieDetailsList from 'components/MovieDetailsList/MovieDetailsList';
+import MovieInfo from 'components/Movie/MovieInfo';
 
 const MovieDetails = () => {
-  const posterImgUrl = 'https://image.tmdb.org/t/p/w500';
-  const location = useLocation();
-  const backLinkLocationRef = useRef(location.state?.from ?? '/');
+  // const posterImgUrl = 'https://image.tmdb.org/t/p/w500';
+  
   const { movieId } = useParams();
   const [movieData, setMovieData] = useState(null);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
   
   
-   useEffect(() => {
-      
-     const movieDetails = async () => {
+  const movieDetailsId = async (id) => {
        try {
-         const movieDetailsData = await API.fetchMovieDetails(movieId)
+         const movieDetailsData = await API.fetchMovieDetails(id)
          setMovieData(movieDetailsData);
        } catch (error) {
-         setError(error);
-       } finally {
-         setIsLoading(false);
-       }
+         console.log(error);
+       } 
      };
-       movieDetails(movieId);
+   useEffect(() => {
+      
+     
+       movieDetailsId(movieId);
        
   }, [movieId])
 
   return (
     <>
-      <Link to={backLinkLocationRef.current}>Назад к странице коллекции</Link>
-      <h1>Movie Details:
-        {movieData?.title
-        || 'Title not available'}</h1>
       
-      <>
-        {error && <p>Something goes wrong</p>} 
-       {isLoading && <Loader />}
-        <MovieDetailsList movies={movieData} posterImgUrl={posterImgUrl}/> 
+      {movieData && (
+        <>
+        {/* {error && <p>Something goes wrong</p>} 
+       {isLoading && <Loader />} */}
+        <MovieDetailsList movies={movieData} /> 
+        <MovieInfo/>
+      </>
+      )}
+      
         
-      </>  
-      <ul>
-        <li>
-          <Link to="cast">Actors</Link>
-          {/* <Cast/> */}
-        </li>
-        <li>
-          <Link to="reviews">About</Link>
-        </li>
-      </ul>
-      <Suspense fallback={<div>LOADING SUBPAGE...</div>}>
+      <Suspense fallback={<div>LOADING ...</div>}>
         <Outlet />
       </Suspense>
     </>
